@@ -8,14 +8,14 @@ def get_argument() -> argparse.Namespace:
     parser.add_argument("-l", "--list", help="List tables in dynamodb", action="store_true")
     parser.add_argument("-i", "--item", help="List items in dynamodb", action="store_true")
 
-    parser.add_argument("-n", "--name", help="Dynamodb name", default=None)
+    parser.add_argument("-n", "--name", help="Dynamodb name", default=None, type=str)
 
-    parser.add_argument("--key", help="Get item table by key", default=None)
-    parser.add_argument("--epoch", help="Get item table by epoch", default=None)
-    parser.add_argument("--block", help="Get item table by block", default=None)
-    parser.add_argument("--bitmap", help="Get item by bitmap need epoch", default=None)
+    parser.add_argument("--key", help="Get item table by key", default=None, type=str)
+    parser.add_argument("--epoch", help="Get item table by epoch", default=None, type=int)
+    parser.add_argument("--block", help="Get item table by block", default=None, type=int)
+    parser.add_argument("--bitmap", help="Get item by bitmap need epoch", default=None, type=int)
 
-    parser.add_argument("-o", "--output", help="Output file", default=None)
+    parser.add_argument("-o", "--output", help="Output file", default=None, type=str)
     return parser.parse_args()
 
 def check_option(args : argparse.Namespace) -> Tuple[dict, bool]:
@@ -40,13 +40,12 @@ def item_option(args : argparse.Namespace, opt : dict) -> dict:
         opt["bitmap"] = args.bitmap
     else:
         sys.exit("error: item (e.g. key, epoch, block, bitmap) option is required")
-    if args.output != None:
-        opt["output"] = args.output
     return opt
 
 def get_options() -> dict:
     args = get_argument()
     opt, has_option = check_option(args)
+    opt["output"] = args.output
     if not has_option or (opt["list"] and not opt["item"]):
         return opt
     if opt["list"] and opt["item"]:

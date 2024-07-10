@@ -17,27 +17,30 @@ class Database:
         keys = [i for i in range(len(tables))]
         return dict(zip(keys, tables))
 
-    def item(self, bitmap : bool = False):
+    def item(self, bitmap : bool = False) -> Dict:
         table = self.resource.Table(f'{self.database}{self.BITMAP}') if bitmap else self.resource.Table(f'{self.database}{self.BLOCKSNAPSHOT}')
         response = table.scan()
         return response.get('Items')
 
-    def item_by_key(self, key : Dict):
+    def item_by_key(self, key : Dict) -> Dict:
         table = self.resource.Table(f'{self.database}{self.BLOCKSNAPSHOT}')
         response = table.get_item(Key=key)
         return response.get('Item')
 
-    def item_by_epoch(self, epoch : int):
+    def item_by_epoch(self, epoch : int) -> Dict:
         items = self.item()
         # TODO: Implement needed
+        return {}
 
-    def item_by_block(self, block : int):
+    def item_by_block(self, block : int) -> Dict:
         items = self.item()
         # TODO: Implement needed
+        return {}
 
-    def item_by_bitmap_epoch(self, epcoh : int):
+    def item_by_bitmap_epoch(self, epcoh : int) -> Dict:
         item = self.item(True)
         # TODO: Implement needed
+        return {}
 
 
 if __name__ == "__main__":
