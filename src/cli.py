@@ -6,8 +6,9 @@ import sys
 LIST = 1
 ITEM = 2
 
-def get_item(db : Database, opt : Dict) -> None:
-    if opt["key"]:
+def get_item(db : Database, opt : Dict) -> Dict:
+    data = dict()
+    if "key" in opt:
         print(f'Item key {opt["key"]}')
     elif opt["epoch"]:
         print(f'Item epoch {opt["epoch"]}')
@@ -15,12 +16,17 @@ def get_item(db : Database, opt : Dict) -> None:
         print(f'Item block {opt["block"]}')
     elif opt["bitmap"]:
         print(f'Item bitmap {opt["bitmap"]}')
+    else:
+        data = db.item()
+    print(data)
+    return data
 
 def print_list_tables(data : Dict) -> None:
-    for value in data.items():
+    for _, value in data.items():
         print(value)
 
 def print_item(data : Dict) -> None:
+
     pass # TODO: Implement is needed
 
 def print_to_stdout(data : Dict, type : int) -> None:
@@ -41,7 +47,7 @@ def cli(opt : Dict) -> None:
         data = db.list_tables()
     elif opt["item"]:
         db.set_name(opt["name"])
-
+        data = get_item(db, opt)
     type = LIST if opt["list"] else ITEM
     if opt["output"] != None:
         return print_to_file(data, type, opt["output"])

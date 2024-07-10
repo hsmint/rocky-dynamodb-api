@@ -38,8 +38,6 @@ def item_option(args : argparse.Namespace, opt : dict) -> dict:
         opt["block"] = args.block
     elif args.bitmap != None:
         opt["bitmap"] = args.bitmap
-    else:
-        sys.exit("error: item (e.g. key, epoch, block, bitmap) option is required")
     return opt
 
 def get_options() -> dict:

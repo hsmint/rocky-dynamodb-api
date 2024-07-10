@@ -6,8 +6,8 @@ class Database:
         self.client = boto3.client('dynamodb', endpoint_url="http://localhost:8000")
         self.resource = boto3.resource('dynamodb', endpoint_url="http://localhost:8000")
         self.database = None
-        self.BITMAP = 'bitmap'
-        self.BLOCKSNAPSHOT = 'blocksnapshot'
+        self.BITMAP = 'cloudEpochBitmapsTable'
+        self.BLOCKSNAPSHOT = 'cloudBlockSnapshotStoreTable'
 
     def set_name(self, name : str) -> None:
         self.database = name
@@ -18,12 +18,17 @@ class Database:
         return dict(zip(keys, tables))
 
     def item(self, bitmap : bool = False) -> Dict:
-        table = self.resource.Table(f'{self.database}{self.BITMAP}') if bitmap else self.resource.Table(f'{self.database}{self.BLOCKSNAPSHOT}')
-        response = table.scan()
-        return response.get('Items')
+        reference_table = f'{self.database}-{self.BITMAP}' if bitmap else f'{self.database}-{self.BLOCKSNAPSHOT}'
+        data = dict()
+        try:
+            table = self.resource.Table(reference_table)
+            data = table.scan().get('Items')
+        except:
+            print(f"Item was not found on {reference_table}")
+        return data
 
     def item_by_key(self, key : Dict) -> Dict:
-        table = self.resource.Table(f'{self.database}{self.BLOCKSNAPSHOT}')
+        table = self.resource.Table(f'{self.database}-{self.BLOCKSNAPSHOT}')
         response = table.get_item(Key=key)
         return response.get('Item')
 
