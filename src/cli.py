@@ -11,9 +11,10 @@ def get_item(db : Database, opt : dict) -> None:
         print(f'Item bitmap {opt["bitmap"]}')
 
 def cli(opt : dict) -> None:
-    db = Database(opt["name"])
     data = None
+    db = Database()
     if opt["list"]:
         print("List")
     elif opt["item"]:
+        db.set_name(opt["name"])
         data = get_item(db, opt)

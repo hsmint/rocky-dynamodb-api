@@ -1,12 +1,15 @@
 import boto3
 
 class Database:
-    def __init__(self, table_name : str, local : bool = True):
+    def __init__(self, local : bool = True) -> None:
         self.client = boto3.client('dynamodb', endpoint_url="http://localhost:8000")
         self.resource = boto3.resource('dynamodb', endpoint_url="http://localhost:8000")
-        self.database = table_name
+        self.database = None
         self.BITMAP = 'bitmap'
         self.BLOCKSNAPSHOT = 'blocksnapshot'
+
+    def set_name(self, name : str) -> None:
+        self.database = name
 
     def list_tables(self):
         return self.client.list_tables()
