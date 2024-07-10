@@ -1,3 +1,4 @@
+from typing import List, Dict
 import boto3
 
 class Database:
@@ -11,15 +12,17 @@ class Database:
     def set_name(self, name : str) -> None:
         self.database = name
 
-    def list_tables(self):
-        return self.client.list_tables()
+    def list_tables(self) -> Dict:
+        tables = self.client.list_tables().get("TableNames")
+        keys = [i for i in range(len(tables))]
+        return dict(zip(keys, tables))
 
     def item(self, bitmap : bool = False):
         table = self.resource.Table(f'{self.database}{self.BITMAP}') if bitmap else self.resource.Table(f'{self.database}{self.BLOCKSNAPSHOT}')
         response = table.scan()
         return response.get('Items')
 
-    def item_by_key(self, key : dict):
+    def item_by_key(self, key : Dict):
         table = self.resource.Table(f'{self.database}{self.BLOCKSNAPSHOT}')
         response = table.get_item(Key=key)
         return response.get('Item')
@@ -38,5 +41,5 @@ class Database:
 
 
 if __name__ == "__main__":
-    db = Database("testinglocal")
+    db = Database()
     print(db)
