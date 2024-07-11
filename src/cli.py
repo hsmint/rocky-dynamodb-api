@@ -24,21 +24,32 @@ def print_list_tables(data : List[Dict]) -> None:
     for _, value in data[0].items():
         print(value)
 
-def print_item(data : List[Dict]) -> None:
+def print_item_int(data : List[Dict]) -> None:
     print("epoch,block,value")
     for item in data:
         key_split = item["key"].split(":")
-        print(f'{key_split[0]},{key_split[1]},{",".join(str(val) for val in item["value"].value)}')
+        print(f'{key_split[0]},{key_split[1]},{item["value"].value}')
 
-def print_to_stdout(data : List[Dict], type : int) -> None:
+def print_item_str(data : List[Dict]) -> None:
+    print("epoch,block,value")
+    for item in data:
+        key_split = item["key"].split(":")
+        print(f'{key_split[0]},{key_split[1]},{[val for val in item["value"].value]}')
+
+def print_item(data : List[Dict], out_type : str) -> None:
+    if out_type == "int":
+        return print_item_int(data)
+    return print_item_str(data)
+
+def print_to_stdout(data : List[Dict], type : int, out_type : str) -> None:
     if type == LIST:
         print_list_tables(data)
     elif type == ITEM:
-        print_item(data)
+        print_item(data, out_type)
 
-def print_to_file(data : List[Dict], type : int, output : str) -> None:
+def print_to_file(data : List[Dict], type : int, output : str, out_type : str) -> None:
     with open(output, "w") as sys.stdout:
-        print_to_stdout(data, type)
+        print_to_stdout(data, type, out_type)
 
 
 def cli(opt : Dict) -> None:
@@ -51,5 +62,5 @@ def cli(opt : Dict) -> None:
         data = get_item(db, opt)
     type = LIST if opt["list"] else ITEM
     if opt["output"] != None:
-        return print_to_file(data, type, opt["output"])
-    print_to_stdout(data, type)
+        return print_to_file(data, type, opt["output"], opt["type"])
+    print_to_stdout(data, type, opt["type"])

@@ -9,6 +9,7 @@ def get_argument() -> argparse.Namespace:
     parser.add_argument("-i", "--item", help="List items in dynamodb", action="store_true")
 
     parser.add_argument("-n", "--name", help="Dynamodb name", default=None, type=str)
+    parser.add_argument("-t", "--type", help="Dynamodb type value", default="int", type=str)
 
     parser.add_argument("--key", help="Get item table by key", default=None, type=str)
     parser.add_argument("--epoch", help="Get item table by epoch", default=None, type=int)
@@ -30,6 +31,11 @@ def item_option(args : argparse.Namespace, opt : dict) -> dict:
     if args.name == None:
         sys.exit("error: dynamodb name is required")
     opt["name"] = args.name
+
+    if not (args.type == "int" or args.type == "str"):
+        sys.exit("error: dynamodb binary type value must be int or str")
+    opt["type"] = args.type
+
     if args.key != None:
         opt["key"] = { "key" : args.key }
     elif args.epoch != None:
