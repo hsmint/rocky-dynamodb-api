@@ -12,14 +12,14 @@ class Database:
     def set_name(self, name : str) -> None:
         self.database = name
 
-    def list_tables(self) -> Dict:
+    def list_tables(self) -> List[Dict]:
         tables = self.client.list_tables().get("TableNames")
         keys = [i for i in range(len(tables))]
-        return dict(zip(keys, tables))
+        return [dict(zip(keys, tables))]
 
-    def item(self, bitmap : bool = False) -> Dict:
+    def item(self, bitmap : bool = False) -> List[Dict]:
         reference_table = f'{self.database}-{self.BITMAP}' if bitmap else f'{self.database}-{self.BLOCKSNAPSHOT}'
-        data = dict()
+        data = list()
         try:
             table = self.resource.Table(reference_table)
             data = table.scan().get('Items')
@@ -27,26 +27,25 @@ class Database:
             print(f"Item was not found on {reference_table}")
         return data
 
-    def item_by_key(self, key : Dict) -> Dict:
+    def item_by_key(self, key : Dict) -> List[Dict]:
         table = self.resource.Table(f'{self.database}-{self.BLOCKSNAPSHOT}')
         response = table.get_item(Key=key)
         return response.get('Item')
 
-    def item_by_epoch(self, epoch : int) -> Dict:
+    def item_by_epoch(self, epoch : int) -> List[Dict]:
         items = self.item()
-        # TODO: Implement needed
-        return {}
+        item_epoch = [item for item in items if int(item["key"].split(':')[0]) == epoch]
+        return item_epoch
 
-    def item_by_block(self, block : int) -> Dict:
+    def item_by_block(self, block : int) -> List[Dict]:
         items = self.item()
-        # TODO: Implement needed
-        return {}
+        item_block = [item for item in items if int(item["key"].split(':')[1]) == block]
+        return item_block
 
-    def item_by_bitmap_epoch(self, epcoh : int) -> Dict:
+    def item_by_bitmap_epoch(self, epcoh : int) -> List[Dict]:
         item = self.item(True)
         # TODO: Implement needed
-        return {}
-
+        return []
 
 if __name__ == "__main__":
     db = Database()

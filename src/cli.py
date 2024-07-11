@@ -1,47 +1,47 @@
 from database import Database
-from typing import Dict
+from typing import List, Dict
 
 import sys
 
 LIST = 1
 ITEM = 2
 
-def get_item(db : Database, opt : Dict) -> Dict:
-    data = dict()
+def get_item(db : Database, opt : Dict) -> List[Dict]:
+    data = list()
     if "key" in opt:
-        print(f'Item key {opt["key"]}')
+        data = db.item_by_key(opt["key"])
     elif opt["epoch"]:
-        print(f'Item epoch {opt["epoch"]}')
+        data = db.item_by_epoch(opt["epoch"])
     elif opt["block"]:
-        print(f'Item block {opt["block"]}')
+        data = db.item_by_block(opt["block"])
     elif opt["bitmap"]:
-        print(f'Item bitmap {opt["bitmap"]}')
+        data = db.item_by_bitmap_epoch(opt["bitmap"])
     else:
         data = db.item()
-    print(data)
     return data
 
-def print_list_tables(data : Dict) -> None:
-    for _, value in data.items():
+def print_list_tables(data : List[Dict]) -> None:
+    for _, value in data[0].items():
         print(value)
 
-def print_item(data : Dict) -> None:
+def print_item(data : List[Dict]) -> None:
+    print("key,value")
+    for item in data:
+        print(f'{item["key"]},{item["value"]}')
 
-    pass # TODO: Implement is needed
-
-def print_to_stdout(data : Dict, type : int) -> None:
+def print_to_stdout(data : List[Dict], type : int) -> None:
     if type == LIST:
         print_list_tables(data)
     elif type == ITEM:
         print_item(data)
 
-def print_to_file(data : Dict, type : int, output : str) -> None:
+def print_to_file(data : List[Dict], type : int, output : str) -> None:
     with open(output, "w") as sys.stdout:
         print_to_stdout(data, type)
 
 
 def cli(opt : Dict) -> None:
-    data = dict()
+    data = list()
     db = Database()
     if opt["list"]:
         data = db.list_tables()
