@@ -12,6 +12,16 @@ class Database:
     def set_name(self, name : str) -> None:
         self.database = name
 
+    def __key_match(self, key : str, epoch : int = -1, block = -1) -> bool:
+        try:
+            split_key = key.split(':')
+            if epoch != -1 and block != -1:
+                raise Exception("Both epoch and block are set")
+            return (epoch != -1 and int(split_key[0]) == epoch) or (block != -1 and int(split_key[1]) == block)
+        except:
+            return False
+        return False
+
     def list_tables(self) -> List[Dict]:
         tables = self.client.list_tables().get("TableNames")
         keys = [i for i in range(len(tables))]
@@ -28,18 +38,27 @@ class Database:
         return data
 
     def item_by_key(self, key : Dict) -> List[Dict]:
-        table = self.resource.Table(f'{self.database}-{self.BLOCKSNAPSHOT}')
-        response = table.get_item(Key=key)
-        return response.get('Item')
+        try:
+            table = self.resource.Table(f'{self.database}-{self.BLOCKSNAPSHOT}')
+            item = table.get_item(Key=key).get('Item')
+        except:
+            item = []
+        return item
 
     def item_by_epoch(self, epoch : int) -> List[Dict]:
-        items = self.item()
-        item_epoch = [item for item in items if int(item["key"].split(':')[0]) == epoch]
+        try:
+            items = self.item()
+            item_epoch = [item for item in items if self.__key_match(item["key"], epoch = epoch)]
+        except:
+            item_epoch = []
         return item_epoch
 
     def item_by_block(self, block : int) -> List[Dict]:
-        items = self.item()
-        item_block = [item for item in items if int(item["key"].split(':')[1]) == block]
+        try:
+            items = self.item()
+            item_block = [item for item in items if self.__key_match(item["key"], block = block)]
+        except:
+            item_block = []
         return item_block
 
     def item_by_bitmap_epoch(self, epcoh : int) -> List[Dict]:
