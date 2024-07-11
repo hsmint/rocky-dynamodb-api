@@ -31,7 +31,7 @@ def item_option(args : argparse.Namespace, opt : dict) -> dict:
         sys.exit("error: dynamodb name is required")
     opt["name"] = args.name
     if args.key != None:
-        opt["key"] = args.key
+        opt["key"] = { "key" : args.key }
     elif args.epoch != None:
         opt["epoch"] = args.epoch
     elif args.block != None:

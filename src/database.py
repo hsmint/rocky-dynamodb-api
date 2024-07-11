@@ -40,8 +40,9 @@ class Database:
     def item_by_key(self, key : Dict) -> List[Dict]:
         try:
             table = self.resource.Table(f'{self.database}-{self.BLOCKSNAPSHOT}')
-            item = table.get_item(Key=key).get('Item')
-        except:
+            item = [table.get_item(Key=key).get('Item')]
+        except Exception as e:
+            print(e)
             item = []
         return item
 

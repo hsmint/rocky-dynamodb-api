@@ -25,9 +25,10 @@ def print_list_tables(data : List[Dict]) -> None:
         print(value)
 
 def print_item(data : List[Dict]) -> None:
-    print("key,value")
+    print("epoch,block,value")
     for item in data:
-        print(f'{item["key"]},{item["value"]}')
+        key_split = item["key"].split(":")
+        print(f'{key_split[0]},{key_split[1]},{",".join(str(val) for val in item["value"].value)}')
 
 def print_to_stdout(data : List[Dict], type : int) -> None:
     if type == LIST:
