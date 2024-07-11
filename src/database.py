@@ -62,7 +62,7 @@ class Database:
         return item_block
 
     def item_by_bitmap_epoch(self, epcoh : int) -> List[Dict]:
-        item = self.item(True)
+        item = self.item(bitmap = True)
         # TODO: Implement needed
         return []
 
