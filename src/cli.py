@@ -24,13 +24,13 @@ def print_list_tables(data : List[Dict]) -> None:
     for _, value in data[0].items():
         print(value)
 
-def print_item_int(data : List[Dict]) -> None:
+def print_item_str(data : List[Dict]) -> None:
     print("epoch,block,value")
     for item in data:
         key_split = item["key"].split(":")
         print(f'{key_split[0]},{key_split[1]},{item["value"].value}')
 
-def print_item_str(data : List[Dict]) -> None:
+def print_item_int(data : List[Dict]) -> None:
     print("epoch,block,value")
     for item in data:
         key_split = item["key"].split(":")
