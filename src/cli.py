@@ -10,11 +10,11 @@ def get_item(db : Database, opt : Dict) -> List[Dict]:
     data = list()
     if "key" in opt:
         data = db.item_by_key(opt["key"])
-    elif opt["epoch"]:
+    elif "epoch" in opt:
         data = db.item_by_epoch(opt["epoch"])
-    elif opt["block"]:
+    elif "block" in opt:
         data = db.item_by_block(opt["block"])
-    elif opt["bitmap"]:
+    elif "bitmap" in opt:
         data = db.item_by_bitmap_epoch(opt["bitmap"])
     else:
         data = db.item()
