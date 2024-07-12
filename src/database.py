@@ -1,4 +1,5 @@
 from typing import List, Dict
+from boto3.dynamodb.conditions import Key
 import boto3
 
 class Database:
@@ -27,7 +28,7 @@ class Database:
         keys = [i for i in range(len(tables))]
         return [dict(zip(keys, tables))]
 
-    def item(self, bitmap : bool = False) -> List[Dict]:
+    def item(self, bitmap : bool = False, scan : str = "") -> List[Dict]:
         reference_table = f'{self.database}-{self.BITMAP}' if bitmap else f'{self.database}-{self.BLOCKSNAPSHOT}'
         data = list()
         try:
@@ -48,16 +49,16 @@ class Database:
 
     def item_by_epoch(self, epoch : int) -> List[Dict]:
         try:
-            items = self.item()
-            item_epoch = [item for item in items if self.__key_match(item["key"], epoch = epoch)]
+            table = self.resource.Table(f'{self.database}-{self.BLOCKSNAPSHOT}')
+            item_epoch = [table.get_item(FilterExpression=Key("key").begins_with(f'{epoch}:')).get('Item')]
         except:
             item_epoch = []
         return item_epoch
 
     def item_by_block(self, block : int) -> List[Dict]:
         try:
-            items = self.item()
-            item_block = [item for item in items if self.__key_match(item["key"], block = block)]
+            table = self.resource.Table(f'{self.database}-{self.BLOCKSNAPSHOT}')
+            item_block = [table.get_item(Key=f'{i}:{block}').get('Item') for i in range(1000)]
         except:
             item_block = []
         return item_block
