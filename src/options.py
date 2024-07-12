@@ -10,6 +10,7 @@ def get_argument() -> argparse.Namespace:
 
     parser.add_argument("-n", "--name", help="Dynamodb name", default=None, type=str)
     parser.add_argument("-t", "--type", help="Dynamodb type value", default="int", type=str)
+    parser.add_argument("--table", help="Get item table", default="snapshot", type=str)
 
     parser.add_argument("--key", help="Get item table by key", default=None, type=str)
     parser.add_argument("--epoch", help="Get item table by epoch", default=None, type=int)
@@ -49,6 +50,7 @@ def get_options() -> dict:
     args = get_argument()
     opt, has_option = check_option(args)
     opt["output"] = args.output
+    opt["table"] = args.table
     opt["type"] = args.type
     if not has_option or (opt["list"] and not opt["item"]):
         return opt

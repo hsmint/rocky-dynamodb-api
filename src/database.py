@@ -66,6 +66,7 @@ class Database:
     def item_by_bitmap_epoch(self, epcoh : int) -> List[Dict]:
         item = self.item(bitmap = True)
         # TODO: Implement needed
+        print(item) # TEST CODE
         return []
 
 if __name__ == "__main__":

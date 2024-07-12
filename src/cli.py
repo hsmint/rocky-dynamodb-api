@@ -17,7 +17,7 @@ def get_item(db : Database, opt : Dict) -> List[Dict]:
     elif "bitmap" in opt:
         data = db.item_by_bitmap_epoch(opt["bitmap"])
     else:
-        data = db.item()
+        data = db.item(bitmap = opt["table"] == "bitmap")
     return data
 
 def print_list_tables(data : List[Dict]) -> None:
