@@ -27,14 +27,20 @@ def print_list_tables(data : List[Dict]) -> None:
 def print_item_str(data : List[Dict]) -> None:
     print("epoch,block,value")
     for item in data:
-        key_split = item["key"].split(":")
-        print(f'{key_split[0]},{key_split[1]},{item["value"].value}')
+        try:
+            key_split = item["key"].split(":")
+            print(f'{key_split[0]},{key_split[1]},{item["value"].value}')
+        except:
+            continue
 
 def print_item_int(data : List[Dict]) -> None:
     print("epoch,block,value")
     for item in data:
-        key_split = item["key"].split(":")
-        print(f'{key_split[0]},{key_split[1]},{[val for val in item["value"].value]}')
+        try:
+            key_split = item["key"].split(":")
+            print(f'{key_split[0]},{key_split[1]},{[val for val in item["value"].value]}')
+        except:
+            continue
 
 def print_item(data : List[Dict], out_type : str) -> None:
     if out_type == "int":
@@ -50,7 +56,6 @@ def print_to_stdout(data : List[Dict], type : int, out_type : str) -> None:
 def print_to_file(data : List[Dict], type : int, output : str, out_type : str) -> None:
     with open(output, "w") as sys.stdout:
         print_to_stdout(data, type, out_type)
-
 
 def cli(opt : Dict) -> None:
     data = list()
