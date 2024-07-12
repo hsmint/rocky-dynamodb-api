@@ -35,7 +35,6 @@ def item_option(args : argparse.Namespace, opt : dict) -> dict:
     if not (args.type == "int" or args.type == "str"):
         sys.exit("error: dynamodb binary type value must be int or str")
     opt["type"] = args.type
-
     if args.key != None:
         opt["key"] = { "key" : args.key }
     elif args.epoch != None:
@@ -50,6 +49,7 @@ def get_options() -> dict:
     args = get_argument()
     opt, has_option = check_option(args)
     opt["output"] = args.output
+    opt["type"] = args.type
     if not has_option or (opt["list"] and not opt["item"]):
         return opt
     if opt["list"] and opt["item"]:
