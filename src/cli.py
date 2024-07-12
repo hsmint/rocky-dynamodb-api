@@ -28,9 +28,11 @@ def print_item_str(data : List[Dict]) -> None:
     print("epoch,block,value")
     for item in data:
         try:
+
             key_split = item["key"].split(":")
             print(f'{key_split[0]},{key_split[1]},{item["value"].value}')
         except:
+            print(f"Exception: {item}")
             continue
 
 def print_item_int(data : List[Dict]) -> None:
