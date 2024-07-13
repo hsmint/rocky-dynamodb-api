@@ -42,6 +42,7 @@ def print_item_int(data : List[Dict]) -> None:
             key_split = item["key"].split(":")
             print(f'{key_split[0]},{key_split[1]},{[val for val in item["value"].value]}')
         except:
+            print(f"Exception: {item}")
             continue
 
 def print_item(data : List[Dict], out_type : str) -> None:
