@@ -53,6 +53,7 @@ def print_item(data : List[Dict], out_type : str) -> None:
 def print_to_stdout(data : List[Dict], type : int, out_type : str) -> None:
     if type == LIST:
         print_list_tables(data)
+
     elif type == ITEM:
         print_item(data, out_type)
 
