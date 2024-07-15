@@ -51,6 +51,7 @@ class Database:
         try:
             table = self.resource.Table(f'{self.database}-{self.BLOCKSNAPSHOT}')
             item_epoch = [table.get_item(FilterExpression=Key("key").begins_with(f'{epoch}:')).get('Item')]
+            print(item_epoch) # TODO : DEBUG CODE
         except:
             item_epoch = []
         return item_epoch
