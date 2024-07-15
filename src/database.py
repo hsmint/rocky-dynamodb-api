@@ -13,16 +13,6 @@ class Database:
     def set_name(self, name : str) -> None:
         self.database = name
 
-    def __key_match(self, key : str, epoch : int = -1, block = -1) -> bool:
-        try:
-            split_key = key.split(':')
-            if epoch != -1 and block != -1:
-                raise Exception("Both epoch and block are set")
-            return (epoch != -1 and int(split_key[0]) == epoch) or (block != -1 and int(split_key[1]) == block)
-        except:
-            return False
-        return False
-
     def list_tables(self) -> List[Dict]:
         tables = self.client.list_tables().get("TableNames")
         keys = [i for i in range(len(tables))]
@@ -59,7 +49,10 @@ class Database:
     def item_by_block(self, block : int) -> List[Dict]:
         try:
             table = self.resource.Table(f'{self.database}-{self.BLOCKSNAPSHOT}')
-            item_block = [table.get_item(Key=f'{i}:{block}').get('Item') for i in range(1000)]
+            item_block = []
+            for i in range(1000):
+                response = table.get_item(Key={"key" : f'{i}:{block}'}).get('Item')
+                if response is not None: item_block.append(response)
         except:
             item_block = []
         return item_block
