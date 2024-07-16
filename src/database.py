@@ -49,8 +49,9 @@ class Database:
     def item_by_block(self, block : int) -> List[Dict]:
         try:
             table = self.resource.Table(f'{self.database}-{self.BLOCKSNAPSHOT}')
+            epoch = int.from_bytes(table.get_item(Key={"key": "EpochCount"}).get('Item')["value"].value, "big")
             item_block = []
-            for i in range(1000):
+            for i in range(1, epoch + 1):
                 response = table.get_item(Key={"key" : f'{i}:{block}'}).get('Item')
                 if response is not None: item_block.append(response)
         except:
