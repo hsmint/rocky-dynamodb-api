@@ -1,4 +1,5 @@
 from typing import List, Dict
+from convert import int2bits
 from boto3.dynamodb.conditions import Key
 import boto3
 
@@ -58,12 +59,20 @@ class Database:
             item_block = []
         return item_block
 
-    def item_by_bitmap_epoch(self, epcoh : int) -> List[Dict]:
-        item = self.item(bitmap = True)
-        # TODO: Implement needed
-        print(item) # TEST CODE
-        return []
-
+    def item_by_bitmap_epoch(self, epoch : int) -> List[Dict]:
+        item = []
+        try:
+            table = self.resource.table(f"{self.database}-{self.BITMAP}")
+            response = table.get_item(Key={"key": f"{epoch}-bitmap"}).get('Item', [])["value"]
+            bitmap = []
+            for byte in response:
+                bitmap += int2bits(byte)
+            table = self.resource.table(f"{self.database}-{self.BLOCKSNAPSHOT}")
+            bitmap = [i for i, val in enumerate(bitmap) if val == 1]
+            item = [table.get_item(Key={"key" : f"{epoch}:{block_id}"}).get("Item") for block_id in bitmap]
+        except:
+            pass
+        return item
 if __name__ == "__main__":
     db = Database()
     print(db)
