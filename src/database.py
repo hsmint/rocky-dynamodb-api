@@ -62,12 +62,12 @@ class Database:
     def item_by_bitmap_epoch(self, epoch : int) -> List[Dict]:
         item = []
         try:
-            table = self.resource.table(f"{self.database}-{self.BITMAP}")
-            response = table.get_item(Key={"key": f"{epoch}-bitmap"}).get('Item', [])["value"]
+            table = self.resource.Table(f"{self.database}-{self.BITMAP}")
+            response = table.get_item(Key={"key": f"{epoch}-bitmap"}).get('Item', [])["value"].value
             bitmap = []
             for byte in response:
                 bitmap += int2bits(byte)
-            table = self.resource.table(f"{self.database}-{self.BLOCKSNAPSHOT}")
+            table = self.resource.Table(f"{self.database}-{self.BLOCKSNAPSHOT}")
             bitmap = [i for i, val in enumerate(bitmap) if val == 1]
             item = [table.get_item(Key={"key" : f"{epoch}:{block_id}"}).get("Item") for block_id in bitmap]
         except:
