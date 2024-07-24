@@ -32,7 +32,7 @@ def print_item_str(data : List[Dict]) -> None:
             key_split = item["key"].split(":")
             print(f'{key_split[0]},{key_split[1]},{item["value"].value}')
         except:
-            print(f"Exception: {item}")
+            sys.stderr.write(f"Exception : {item}\n")
             continue
 
 def print_item_int(data : List[Dict]) -> None:
@@ -40,9 +40,9 @@ def print_item_int(data : List[Dict]) -> None:
     for item in data:
         try:
             key_split = item["key"].split(":")
-            print(f'{key_split[0]},{key_split[1]},{[val for val in item["value"].value]}')
+            print(f'{key_split[0]},{key_split[1]},"{[val for val in item["value"].value]}"')
         except:
-            print(f"Exception: {item}")
+            sys.stderr.write(f"Exception : {item}\n")
             continue
 
 def print_item(data : List[Dict], out_type : str) -> None:
